@@ -143,3 +143,6 @@ CORS_ORIGIN_WHITELIST = [
     'http://localhost:8080',
 ]
 
+JWT_AUTH = {
+    'JWT_RESPONSE_PAYLOAD_HANDLER': 'LoveDemMovies.api.utils.jwt_response_handler'
+}
