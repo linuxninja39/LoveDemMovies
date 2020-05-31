@@ -24,12 +24,14 @@ class MovieSerializer(serializers.HyperlinkedModelSerializer):
     @staticmethod
     def get_rating(movie):
         movie_user_ratings = movie.movieuserrating_set.all()
+        if movie_user_ratings.count() < 1:
+            return 0
+
         return reduce(lambda a, b: a.rating + b.rating, movie_user_ratings) / movie_user_ratings.count()
 
     class Meta:
         model = Movie
         fields = ['title', 'year', 'rating']
-
 
 class MovieUserRatingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
