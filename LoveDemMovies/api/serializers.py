@@ -24,14 +24,23 @@ class MovieSerializer(serializers.HyperlinkedModelSerializer):
     @staticmethod
     def get_rating(movie):
         movie_user_ratings = movie.movieuserrating_set.all()
+        count = movie_user_ratings.count()
         if movie_user_ratings.count() < 1:
             return 0
+        if movie_user_ratings.count() == 1:
+            return movie_user_ratings.first().rating
 
-        return reduce(lambda a, b: a.rating + b.rating, movie_user_ratings) / movie_user_ratings.count()
+        # result = reduce(lambda a, b: a.rating + b.rating, movie_user_ratings) / movie_user_ratings.count()
+        # not sure why the reduce is failing, using for instead
+        total = 0
+        for movie_user_rating in movie_user_ratings:
+            total += movie_user_rating.rating
+        return total/count
 
     class Meta:
         model = Movie
         fields = ['title', 'year', 'rating']
+
 
 class MovieUserRatingSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
